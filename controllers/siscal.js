@@ -2,6 +2,7 @@
 var Student = require('../models/student');
 var Teacher = require('../models/teacher');
 var Cal = require('../models/calificaciones');
+var Crypto = require('crypto');
 
 var controllerLogin = {
 
