@@ -1,16 +1,18 @@
 
 var express = require("express");
-var controllerLogin = require("../controllers/siscal");
+var jwt = require('express-jwt');
 
+var auth = jwt ({secret: "MY_SECRET", userProperty: "payload"});
 var routing = express.Router();
 
-routing.post('/create', controllerLogin.createUser);
-routing.get('/loginstudent/:userName', controllerLogin.getStudent);
-routing.get('/loginteacher/:userName', controllerLogin.getTeacher);
-routing.get('/loginmanager/:userName', controllerLogin.getManager);
-routing.get('/getinfoforcal/:grade/:register', controllerLogin.getInfoCal);
-routing.post('/getinfoforcal/:idcal', controllerLogin.setCal);
+var ctrlProfile = require('../controllers/profile');
+var ctrlAuth    = require('../controllers/authentication');
 
+//Perfil luego de acceder
+routing.get('/profile', auth, ctrlProfile.profileRead);
 
+// Autenticación
+routing.post('/login', ctrlAuth.login);
+routing.post('/register', ctrlAuth.register);
 
 module.exports = routing;
