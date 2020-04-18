@@ -12,7 +12,7 @@ module.exports.profileRead = function(req, res){
 	}else{
 
 		User.findById(req.payload_id).exec(function(err, user){
-
+			
 			res.status(200).json(user);
 		})
 	}
