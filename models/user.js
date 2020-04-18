@@ -5,34 +5,31 @@ var crypto = require ('crypto');
 var Schema = mongoose.Schema;
 var jwt = require('jsonwebtoken');
 
+var userSchema = Schema({
 
-var ManagerSchema = Schema({
-	name: String,
-	lastName: String,
-	age: Number,
+	calificaciones: {type: Schema.ObjectId, ref: "Cal", require: false},
+	userName: {type: String, unique: true, require: true},
+	name: {type: String, require: true},
 
-	img: String,
-	tutors: String,
-	_userName: String,
-	credential: String,
-	
-	hash : String,
+	hash: String,
 	salt: String
+	
+
+	//add password in frontend model
 });
 
-
-ManagerSchema.method.setPassword = function(password){
+userSchema.method.setPassword = function(password){
 	this.salt = crypto.randomBytes(16).toString('hex');
 	this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
 };
 
-ManagerSchema.method.validPassword = function(password){
+userSchema.method.validPassword = function(password){
 	var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
 
 	return this.hash === hash;
 };
 
-ManagerSchema.method.generateJwt = ()=>{
+userSchema.method.generateJwt = ()=>{
 	var expiry = new Date;
 	expiry.setDate(expiry.getDate() + 7)
 
@@ -40,10 +37,9 @@ ManagerSchema.method.generateJwt = ()=>{
 		_id: this._id,
 		name: this.name,
 		userName: this.userName,
-		credential: this.credential
+		exp: parseInt(expiry.getTime() / 1000)
 	}, "THE SECRET");
 };
 
-
-module.exports = mongoose.model("Manager", ManagerSchema);
+module.exports = mongoose.model("User", userSchema);
 
