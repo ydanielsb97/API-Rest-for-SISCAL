@@ -29,5 +29,5 @@ router.get('/', (req, res) => {
 
 
 app.use(router);
-app.listen(properties.PORT, ()=> console.log(`Servidor corriendo más que feliz sanchez`));
+app.listen(properties.PORT, ()=> console.log(`Servidor corriendo más que feliz sanchez en ${properties.PORT}`));
 

@@ -7,19 +7,20 @@ const expiresIn = 24 * 60 * 60;
 exports.createUser = (req, res, next) =>{
 	const newUser = {
 		name: req.body.name,
-		email: req.body.email,
+		userName: req.body.userName,
 		password: bcrypt.hashSync(req.body.password)
 	}
 
 	User.create(newUser, (err, user)=>{
-		if(err && err.code == 11000) return res.status(409).send("Email already exist") 
+		if(err && err.code == 11000) return res.status(409).send("userName already exist") 
 
+		
 		if (err) return res.status(500).send('Server Error');
 		const accessToken = jwt.sign({id:user.id}, SECRET_KEY, {expiresIn: expiresIn})
 
 		const userData = {
 			name: user.name,
-			email: user.email,
+			userName: user.userName,
 			accessToken: accessToken,
 			expiresIn: expiresIn
 		}
@@ -30,16 +31,16 @@ exports.createUser = (req, res, next) =>{
 
 exports.loginUsers = (req, res, next) => {
 	const userData = {
-		email: req.body.email,
+		userName: req.body.userName,
 		password: req.body.password
 	}
 
-	User.findOne({email: userData.email}, (err, user) =>{
-		if(err) return res.status(500).send({message:"Has been an error"});
+	User.findOne({userName: userData.userName}, (err, user) =>{
+		if(err) return res.status(500).send({message:"Ha1s been an error"});
 
 		if(!user){
-			// Email does`nt exist
-			res.status(409).send({message: "Has been an error"});
+			// userName does`nt exist
+			res.status(409).send({message: "Has 2been an error"});
 		}else{
 			const resultPassword = bcrypt.compareSync(userData.password, user.password);
 			if(resultPassword){
@@ -47,7 +48,7 @@ exports.loginUsers = (req, res, next) => {
 
 			const dataUser = {
 				name: user.name,
-				email: user.email,
+				userName: user.userName,
 				accessToken: accessToken,
 				expiresIn: expiresIn
 			}	
@@ -56,7 +57,7 @@ exports.loginUsers = (req, res, next) => {
 			}else{
 				// Password does`nt exist
 
-				res.status(409).send({message: "Has been an error"});
+				res.status(409).send({message: "Ha3s been an error"});
 			}
 		};
 		
